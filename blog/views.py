@@ -1,5 +1,5 @@
 from django.shortcuts import render_to_response,get_object_or_404
-from .models import Blog,BlogType
+from .models import Blog,BlogType,ReadNum
 from django.core.paginator import Paginator
 from django.db.models import Count
 from datetime import datetime
@@ -56,9 +56,15 @@ def blog_list_with_date(request, year, month):
 def blog_detail(request, blog_pk):
     blog = get_object_or_404(Blog, pk=blog_pk)
     if not request.COOKIES.get('%s_blog_read' % blog.pk):
+        if ReadNum.objects.filter(blog=blog).count():
+            #记录存在
+            readnum = ReadNum.objects.get(blog=blog)
+        else:
+            #记录不存在
+            readnum = ReadNum(blog=blog)
         #阅读量+1
-        blog.read_num += 1
-        blog.save()
+        readnum.read_num += 1
+        readnum.save()
     context = {}
     context['previours_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()
     context['next_blog'] = Blog.objects.filter(created_time__lt=blog.created_time).first() 

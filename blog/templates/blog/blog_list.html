@@ -23,7 +23,7 @@
                                 <a href="{% url 'blog_detail' blog.pk %}"><h3>{{ blog.title }}</h3></a>
                                 <span class="glyphicon glyphicon-tag"></span><a href="{% url 'blog_list_with_type' blog.blog_type.pk %}">{{ blog.blog_type }}</a>
                                 <span class="glyphicon glyphicon-time"></span>{{ blog.created_time|date:"Y-m-d H:n:s" }}
-                                阅读({{ blog.read_num }})
+                                阅读({{ blog.get_read_num }})
                                 <p class="blog-info">{{ blog.content|striptags|truncatechars:50 }}</p>
                             </div>
                         {% empty %}
