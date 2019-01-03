@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    我的博客|错误页面
+{% endblock %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static 'blog/blog.css' %}">
+{% endblock %}
+
+{% block nav_blog_active %}active{% endblock %}
+
+{% block content %}
+{{ message }},<a href="{{ back_url }}">返回</a>
+{% endblock %}

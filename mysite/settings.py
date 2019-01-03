@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog',
     'ckeditor',
     'ckeditor_uploader',
+    'blog',
+    'read_statistics',
+    'comment',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +136,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #配置ckeditor上传文件路径
 CKEDITOR_UPLOAD_PATH='upload/'
+
+#使用缓存
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}

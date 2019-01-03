@@ -3,8 +3,68 @@
 {% block title %}
     首页
 {% endblock %}
-{% block header %}<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">{% endblock %}
+{% block header %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+{% endblock %}
 {% block nav_home_active %}active{% endblock %}
 {% block content %}
     <h3 class="home-content">欢迎访问我的网站</h3>
+
+
+    <div id="container" style="width: 600px;height:400px;"></div>
+    <h3>今日热门点击</h3>
+    <ul>
+        {% for hot_data in today_hot_data %}
+            <li><a href="{% url 'blog_detail' hot_data.object_id %}">{{ hot_data.content_object.title }}({{ hot_data.read_num }})</a></li>
+        {% empty %}
+            <li>暂无热门博客</li>
+        {% endfor %}
+    </ul>
+
+    <h3>前7日热门点击</h3>
+    <ul>
+        {% for hot_data in seven_day_hotdata %}
+            <li><a href="{% url 'blog_detail' hot_data.id %}">{{ hot_data.title }}({{ hot_data.read_num_sum }})</a></li>
+        {% empty %}
+            <li>暂无热门博客</li>
+        {% endfor %}
+    </ul>
+     <script>
+        // 图表配置
+        var options = {
+            chart: {
+                type: 'line'                          //指定图表的类型，默认是折线图（line）
+            },
+            title: {
+                text: null                 // 标题
+            },
+            xAxis: {
+                title: {text: '前7日阅读量趋势' },
+                categories: {{ dates|safe }}   // x 轴分类
+            },
+            yAxis: {
+                title: {text: null},
+                labels:{enabled: false},
+                gridLineDashStyle: 'Dash',
+            },
+            series: [{
+                name: '阅读量',
+                data: {{ read_nums }}
+            }, ],
+            credits:{
+                enabled: false
+            },
+            legend:{enabled: false},
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+        };
+        // 图表初始化函数
+        var chart = Highcharts.chart('container', options);
+    </script>
 {% endblock %}
