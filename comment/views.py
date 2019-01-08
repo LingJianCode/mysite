@@ -21,7 +21,7 @@ def update_comment(request):
         model_obj = model_class.objects.get(pk=object_id)
     except Exception as e:
         return render(request, 'error.html', {'message':'评论异常',"back_url":referer})
-        
+
     comment = Comment()
     comment.user = user
     comment.text = text
