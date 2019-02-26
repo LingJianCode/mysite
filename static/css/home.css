@@ -5,9 +5,10 @@
     margin-bottom: 1em;
 }
 
-div#container {
+div#container-chart {
     margin: 0 auto;
     height: 20em;
     min-width: 30em;
     max-width: 40em;
 }
+

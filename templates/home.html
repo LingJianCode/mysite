@@ -12,24 +12,40 @@
     <h3 class="home-content">欢迎访问我的网站</h3>
 
 
-    <div id="container" style="width: 600px;height:400px;"></div>
-    <h3>今日热门点击</h3>
-    <ul>
-        {% for hot_data in today_hot_data %}
-            <li><a href="{% url 'blog_detail' hot_data.object_id %}">{{ hot_data.content_object.title }}({{ hot_data.read_num }})</a></li>
-        {% empty %}
-            <li>暂无热门博客</li>
-        {% endfor %}
-    </ul>
+    <div id="container-chart" style="width: 600px;height:400px;"></div>
 
-    <h3>前7日热门点击</h3>
-    <ul>
-        {% for hot_data in seven_day_hotdata %}
-            <li><a href="{% url 'blog_detail' hot_data.id %}">{{ hot_data.title }}({{ hot_data.read_num_sum }})</a></li>
-        {% empty %}
-            <li>暂无热门博客</li>
-        {% endfor %}
-    </ul>
+    <div class="container" >
+        <div class="row" >
+            <div class="col-xs-4 col-md-4 col-lg-4 col-xs-offset-2 col-md-offset-2">
+                <div class="panel panel-default">
+                  <div class="panel-heading"><h3>今日热门点击</h3></div>
+                    <ul class="list-group">
+                        {% for hot_data in today_hot_data %}
+                            <li class="list-group-item"><a href="{% url 'blog_detail' hot_data.object_id %}">{{ hot_data.content_object.title }}({{ hot_data.read_num }})</a></li>
+                        {% empty %}
+                            <li class="list-group-item">暂无热门博客</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="col-xs-4 col-md-4 col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3>前7日热门点击</h3></div>
+                        <ul class="list-group">
+                            {% for hot_data in seven_day_hotdata %}
+                                <li class="list-group-item"><a href="{% url 'blog_detail' hot_data.id %}">{{ hot_data.title }}({{ hot_data.read_num_sum }})</a></li>
+                            {% empty %}
+                                <li class="list-group-item">暂无热门博客</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
      <script>
         // 图表配置
         var options = {
@@ -65,6 +81,6 @@
             },
         };
         // 图表初始化函数
-        var chart = Highcharts.chart('container', options);
+        var chart = Highcharts.chart('container-chart', options);
     </script>
 {% endblock %}

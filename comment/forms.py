@@ -8,7 +8,7 @@ class CommentForm(forms.Form):
     content_type = forms.CharField(widget=forms.HiddenInput)
     object_id = forms.IntegerField(widget=forms.HiddenInput)
     #lable=False 去掉前端显示的label
-    text = forms.CharField(widget=CKEditorWidget(config_name='comment_ckeditor'), label=False)
+    text = forms.CharField(widget=CKEditorWidget(config_name='comment_ckeditor'), label=False, error_messages={'required':'评论内容不能为空'})
 
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
