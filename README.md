@@ -1,1 +1,1 @@
-This project is study django
+This project is study django.
