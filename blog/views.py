@@ -61,7 +61,7 @@ def blog_detail(request, blog_pk):
     blog = get_object_or_404(Blog, pk=blog_pk)
     read_cookie_key = read_statistics_once_read(request, blog)
     blog_content_type = ContentType.objects.get_for_model(model=blog)
-    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk)
+    comments = Comment.objects.filter(content_type=blog_content_type, object_id=blog.pk, parent=None)
 
     context = {}
     context['previours_blog'] = Blog.objects.filter(created_time__gt=blog.created_time).last()

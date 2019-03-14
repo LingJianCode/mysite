@@ -66,8 +66,20 @@
                     <h3 class="comment-area-text">评论列表</h3>
                     <div id="comment_list">
                         {% for comment in comments %}
-                            <div>
+                            <div class="comment" >
                                 {{ comment.user.username }}({{ comment.comment_time|date:"Y-m-d H:i:s" }})：{{ comment.text|safe }}
+                            
+
+                                {% for reply in comment.root_comment.all %}
+                                    <div class="reply_list">
+                                        {{ reply.user.username }}
+                                        {{ reply.comment_time|date:"Y-m-d H:i:s" }}
+                                        回复
+                                        {{ reply.reply_to.username }}:
+                                        {{ reply.text }}
+                                        
+                                    </div>
+                                {% endfor %}
                             </div>
                         {% empty %}
                             <span id='no_comment'>暂无评论</span>

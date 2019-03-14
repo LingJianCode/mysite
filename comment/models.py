@@ -11,7 +11,17 @@ class Comment(models.Model):
 
     text = models.TextField()
     comment_time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    #related_name由于有两个字段外键了User所以必须指定相应的关系
+    user = models.ForeignKey(User, related_name="comments",on_delete=models.DO_NOTHING)
+
+    #树型结构
+    #顶级评论
+    root = models.ForeignKey('self', related_name="root_comment",null=True, on_delete=models.DO_NOTHING)
+    #父评论
+    parent = models.ForeignKey('self', related_name="parent_comment", null=True, on_delete=models.DO_NOTHING)
+    #回复谁
+    reply_to = models.ForeignKey(User, related_name="replies" ,null=True, on_delete=models.DO_NOTHING)
+
 
     class Meta:
         ordering = ['-comment_time']

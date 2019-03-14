@@ -12,7 +12,7 @@ class CommentForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         if 'user' in kwargs:
-            #必须将自定义的的参赛拿出，不然报错??
+            #必须将自定义的的参数拿出，不然报错??
             self.user = kwargs.pop('user')
         super(CommentForm, self).__init__(*args, **kwargs)
 

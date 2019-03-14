@@ -9,6 +9,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(label="密码", 
                                widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'请输入密码'}))
 
+    #做表单数据验证
     def clean(self):
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
@@ -33,7 +34,7 @@ class RegForm(forms.Form):
                                         min_length=6, 
                                         widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'请再一次输入密码'}))
 
-
+    #做表单数据验证
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
