@@ -17,6 +17,13 @@ def update_comment(request):
         comment.user = comment_form.cleaned_data['user']
         comment.text = comment_form.cleaned_data['text']
         comment.content_object = comment_form.cleaned_data['model_obj']
+
+        parent = comment_form.cleaned_data['parent']
+        if not parent is None:
+            comment.root = parent.root if not parent.root is None else parent
+            comment.parent = parent
+            comment.reply_to = parent.user
+
         comment.save()
 #        return redirect(referer)
 #    else:
@@ -28,6 +35,15 @@ def update_comment(request):
         #django的时间问题,需要转换成本地时间
         data['comment_time'] = localtime(comment.comment_time).strftime('%Y-%m-%d %H:%M:%S')
         data['text'] = comment.text
+
+        if not parent is None:
+            data['reply_to'] = comment.reply_to.username
+        else:
+            data['reply_to'] = ''
+
+        data['pk'] = comment.pk
+        data['root_pk'] = comment.root.pk if not comment.root is None  else ''
+
     else:
         data['status'] = 'ERROR'
         data['message'] = list(comment_form.errors.values())[0][0]

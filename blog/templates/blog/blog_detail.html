@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 {% load staticfiles %}
 {% block title %}{{ blog.title }}{% endblock %}
 
@@ -66,18 +66,24 @@
                     <h3 class="comment-area-text">评论列表</h3>
                     <div id="comment_list">
                         {% for comment in comments %}
-                            <div class="comment" >
-                                {{ comment.user.username }}({{ comment.comment_time|date:"Y-m-d H:i:s" }})：{{ comment.text|safe }}
-                            
-
+                            <div class="comment" id="root_{{ comment.pk }}">
+                                <span>{{ comment.user.username }}</span>
+                                <span>({{ comment.comment_time|date:"Y-m-d H:i:s" }})：</span>
+                                <div id="comment_{{ comment.pk }}">
+                                    {{ comment.text|safe }}
+                                </div>
+                                <a href="javascript:reply({{ comment.pk }});">回复</a>
+                                
                                 {% for reply in comment.root_comment.all %}
                                     <div class="reply_list">
-                                        {{ reply.user.username }}
-                                        {{ reply.comment_time|date:"Y-m-d H:i:s" }}
-                                        回复
-                                        {{ reply.reply_to.username }}:
-                                        {{ reply.text }}
-                                        
+                                        <span>{{ reply.user.username }}</span>
+                                        <span>{{ reply.comment_time|date:"Y-m-d H:i:s" }}</span>
+                                        <span>回复</span>
+                                        <span>{{ reply.reply_to.username }}</span>
+                                        <div id="comment_{{ reply.pk }}">
+                                            {{ reply.text|safe }}
+                                        </div>
+                                        <a href="javascript:reply({{ reply.pk }});">回复</a>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -116,7 +122,18 @@
                 success: function(data){
                     console.log(data);
                     if(data['status']=='SUCCESS'){
-                        var comment_html='<div>'+ data['username'] +'（'+ data['comment_time'] +'）：'+ data['text'] +'</div>';
+                        //判断插入是评论还是回复
+                        //0-->评论
+                        if($('#reply_comment_id').val()=='0'){
+                            var comment_html='<div class="comment" id="root_'+ data['pk'] +'"> <span>'+ data['username'] +'</span><span>(' + data['comment_time'] + ')：</span><div id="comment_' + data['pk'] + '">'+ data['text'] +'</div><a href="javascript:reply(' +data['pk']+ ');">回复</a></div>';
+                            $('#comment_list').prepend(comment_html);
+                        }else{
+                            //回复
+                             var reply_html='<div class="reply_list"><span>'+ data['username'] +'</span><span>' + data['comment_time'] + '</span><span>回复</span><span>' + data['reply_to'] + '</span><div id="comment_' + data['pk'] + '">'+ data['text'] +'</div><a href="javascript:reply(' + data['pk'] + ');">回复</a></div>';
+
+                             $('#root_' + data['root_pk']).append(reply_html);
+                        }
+
                         $("#comment_list").prepend(comment_html);
                         //清空编辑框内容
                         CKEDITOR.instances['id_text'].setData('');
@@ -132,5 +149,15 @@
             //禁止提交
             return false;
         });
+
+        function reply(reply_comment_id){
+            //使用富文本编辑器，添加回复id
+            $('#reply_comment_id').val(reply_comment_id);
+            //滚动到编辑框
+            $('html').animate({scrollTop:$('#comment_form').offset().top-60}, 300 ,function(){
+                //获得编辑框焦点
+                 CKEDITOR.instances['id_text'].focus();
+            });
+        }
     </script>
 {% endblock %}

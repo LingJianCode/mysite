@@ -22,6 +22,8 @@ class Comment(models.Model):
     #回复谁
     reply_to = models.ForeignKey(User, related_name="replies" ,null=True, on_delete=models.DO_NOTHING)
 
+    def  __str__(self):
+        return str(self.object_id)+'||'+self.text[0:50]
 
     class Meta:
-        ordering = ['-comment_time']
+        ordering = ['comment_time']
