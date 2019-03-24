@@ -1,11 +1,17 @@
     {% extends 'base.html' %}
 {% load staticfiles %}
+
+{#加载自定义模板标签#}
+{% load comment_tags %}
+
 {% block title %}{{ blog.title }}{% endblock %}
+
+
 
 {% block header %}
 <link rel="stylesheet" href="{% static 'blog/blog.css' %}">
-<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock %}
 
 {% block nav_blog_active %}active{% endblock %}
@@ -20,8 +26,18 @@
                     <li>分类：<a href="{% url 'blog_list_with_type' blog.blog_type.pk %}">{{ blog.blog_type }}</a></li>
                     <li>创建日期：{{ blog.created_time|date:"Y-m-d H:i:s" }}</li>
                     <li>阅读({{ blog.get_read_num }})</li>
+                    <!-- 自定义的模板标签 -->
+                    <li>评论({% get_comment_count blog %})</li>
+                    <li>{% test '传入的值' %}</li>
                 </ul>
+
+                <!-- 点赞 -->
                 <p class="blog-content">{{ blog.content|safe }}</p>
+                <div class="like">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    <span class="liked-num">0</span>
+                    <span>喜欢</span>
+                </div>
 
                 <div class="blog-more">
                     <p>上一篇：
@@ -49,9 +65,19 @@
                     <h3 class="comment-area-text">提交评论</h3>
                     {% if user.is_authenticated %}
                         {{ user }},欢迎评论~
+
+                        <!-- 展示回复谁的内容 -->
+                        <div id="reply_content_container" style="display:none;">
+                                <p>回复：</p>
+                                <div id="reply_content"></div>
+                        </div>
+
+
                         <form id="comment_form" action="{% url 'update_comment' %}" method="POST" style="overflow: hidden;">
                             {% csrf_token %}
-                            {{ comment_forms }}
+                            {% for field in comment_form %}
+                                {{ field }}
+                            {% endfor %}
                             <span id='comment_errors' class="text-danger pull-left"></span>
                             <input type="submit" name="提交" class="btn btn-primary pull-right">
                         </form>
@@ -137,7 +163,10 @@
                         $("#comment_list").prepend(comment_html);
                         //清空编辑框内容
                         CKEDITOR.instances['id_text'].setData('');
+                        $('#reply_content_container').hide();
+                        $('#reply_comment_id').val('0');
                         $("#no_comment").remove();
+                        $("#comment_errors").text("评论成功");
                     }else{
                         $("#comment_errors").text(data['message']);
                     }
@@ -153,8 +182,14 @@
         function reply(reply_comment_id){
             //使用富文本编辑器，添加回复id
             $('#reply_comment_id').val(reply_comment_id);
+
+            //展示被回复的内容
+            var html = $("#comment_" + reply_comment_id).html();
+            $('#reply_content').html(html);
+            $('#reply_content_container').show();
+
             //滚动到编辑框
-            $('html').animate({scrollTop:$('#comment_form').offset().top-60}, 300 ,function(){
+            $('html').animate({scrollTop:$('#comment_form').offset().top-150}, 300 ,function(){
                 //获得编辑框焦点
                  CKEDITOR.instances['id_text'].focus();
             });

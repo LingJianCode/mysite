@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
-from .views import home,login,register
+from .views import home
 
 urlpatterns = [
     path('', home, name='home'),
@@ -27,8 +27,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('comment/', include('comment.urls')),
-    path('login/', login, name='login'),
-    path('register/', register, name='register'),
+    path('user/', include('user.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

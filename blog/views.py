@@ -73,7 +73,7 @@ def blog_detail(request, blog_pk):
     data['content_type'] = blog_content_type.model
     data['object_id'] = blog_pk
     data['reply_comment_id'] = '0'
-    context['comment_forms'] = CommentForm(initial=data)
+    context['comment_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk, 'reply_comment_id': 0})
     
     response = render(request, 'blog/blog_detail.html', context)
     #设置cookie来判断阅读数

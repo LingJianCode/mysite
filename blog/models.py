@@ -13,11 +13,12 @@ class BlogType(models.Model):
 
 
 #利用继承来进一步优化代码
+#models.CASCADE 级联删除，删除这个，会将它关联的数据给删除
 class Blog(models.Model, ReadNumExpandMethod):
     title = models.CharField(max_length=50)
-    blog_type = models.ForeignKey(BlogType, on_delete=models.DO_NOTHING)
+    blog_type = models.ForeignKey(BlogType, on_delete=models.CASCADE)
     content = RichTextUploadingField()
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     read_details = GenericRelation(ReadDetail)
     created_time = models.DateTimeField(auto_now_add=True)
     last_updated_time = models.DateTimeField(auto_now=True)
