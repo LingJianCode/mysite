@@ -7,6 +7,7 @@ from read_statistics.utils import read_statistics_once_read
 from .models import Blog,BlogType
 from comment.models import Comment
 from comment.forms import CommentForm
+from user.forms import LoginForm
 
 def get_blog_list_common_date(blogs_all_list, request):
     paginator = Paginator(blogs_all_list, 10)
@@ -75,6 +76,7 @@ def blog_detail(request, blog_pk):
     data['reply_comment_id'] = '0'
     context['comment_form'] = CommentForm(initial={'content_type': blog_content_type.model, 'object_id': blog_pk, 'reply_comment_id': 0})
     
+    context['login_form'] = LoginForm()
     response = render(request, 'blog/blog_detail.html', context)
     #设置cookie来判断阅读数
     response.set_cookie(read_cookie_key,'true', max_age=60, expires=datetime)

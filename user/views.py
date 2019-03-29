@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.http import JsonResponse
 from .forms import LoginForm,RegForm
 
 
@@ -51,3 +52,14 @@ def logout(request):
 def user_info(request):
     context = {}
     return render(request, 'user/user_info.html', context)
+
+def login_for_medal(request):
+    login_form = LoginForm(request.POST)
+    data = {}
+    if login_form.is_valid():
+        user = login_form.cleaned_data['user']
+        auth.login(request, user)
+        data['status'] = 'SUCCESS'
+    else:
+        data['status'] = 'ERROR'
+    return JsonResponse(data)
